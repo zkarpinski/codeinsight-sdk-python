@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "codeinsight_sdk"
+version = "0.0.1"
+description = "A Python client for the Revenera Code Insight"
+authors = ["Zachary Karpinski <1206496+zkarpinski@users.noreply.github.com>"]
+readme = "README.md"
+license = "Apache-2.0"
+repository = "https://github.com/zkarpinski/codeinsight-sdk-python"
+keywords = ["revenera", "api", "flexera", "code insight","sdk"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+requests = "^2.31.0"
+argparse = "^1.4.0"
+dataclasses-json = "^0.6.3"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+pytest-mock = "^3.0.0"
+pytest-cov = "*"
+exceptiongroup = "^1.2.0"
+requests-mock = "^1.11.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--cov=codeinsight_sdk", "--cov-report=term-missing"]
+
+
