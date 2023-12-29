@@ -1,0 +1,12 @@
+{
+    "extends": [
+        "config:base"
+    ],
+    "packageRules": [
+        {
+            "packageNames": ["*"],
+            "automerge": true,
+            "schedule": ["after 7am on Friday"]
+        }
+    ]
+}
