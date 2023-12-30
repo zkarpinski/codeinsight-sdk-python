@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from dataclasses_json import DataClassJsonMixin, dataclass_json
-from typing import Any, Optional, List
-from .handlers import Handler
+from typing import Any, Optional, List, Dict
 
 @dataclass
 class Project(DataClassJsonMixin):
@@ -11,10 +10,10 @@ class Project(DataClassJsonMixin):
     owner: Optional[str] = None
     description: Optional[str] = None
     dateCreated: Optional[str] = None
+    projectPath: Optional[str] = None
+    # TODO: Should this be a dictionary or another class? This structure is reused in a few APIs
+    vulnerabilities: Optional[Dict[str, Dict]] = None
 
-    @property
-    def inventory(self) -> Handler:
-        return Handler.create(self, ProjectInventory)
 
 @dataclass
 class Vulnerability(DataClassJsonMixin):
@@ -28,15 +27,17 @@ class Vulnerability(DataClassJsonMixin):
 class ProjectInventoryItem(DataClassJsonMixin):
     itemNumber: int
     id: int
+    componentName: str
+    componentVersionName: str
     name: str
     type: str
     priority: str
     createdBy: str
     createdOn: str
     updatedOn: str
-    componentName: str
-    componentVersionName: str
+    url: Optional[str] = None
     vulnerabilites: Optional[List[Vulnerability]] = None
+    vulnerabilitySummary: Optional[Dict[str, Dict]] = None
     filePaths: Optional[List[str]] = None
 
 @dataclass_json #Trying this style instead of DataClassJsonMixin

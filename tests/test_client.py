@@ -33,16 +33,54 @@ class TestCodeInsightClient:
             projects = client.projects.all()
         assert len(projects) > 0
 
-    def test_get_project(self,client):
+    def test_get_project_id(self,client):
         projectName = "Test"
         with requests_mock.Mocker() as m:
             m.get(f"{TEST_URL}/codeinsight/api/project/id", text='{ "Content": 1 }')
             project_id = client.projects.get_id(projectName)
         assert project_id == 1
+    
+    def test_get_project(self,client):
+        project_id = 1
+        fake_response_json = """ { "data": {
+            "id": 1,
+            "name": "Test",
+            "description": "Test project",
+            "createdBy": "Zach",
+            "createdOn": "Today",
+            "updatedOn": "Tomorrow",
+            "projectType": "maven",
+            "projectUrl": "",
+            "vulnerabilities": {
+                "CvssV2": {
+                    "High": 2,
+                    "Medium": 2,
+                    "Low": 3,
+                    "Unknown": 4
+                },
+                "CvssV3": {
+                    "Critical": 1,
+                    "High": 1,
+                    "Medium": 2,
+                    "Low": 6,
+                    "Unknown": 1
+                }
+            }
+        }}
+        """
+        with requests_mock.Mocker() as m:
+            m.get(f"{TEST_URL}/codeinsight/api/projects/{project_id}", text=fake_response_json)
+            project = client.projects.get(project_id)
+        assert project.id == 1
+        assert project.name == "Test"
+        assert project.vulnerabilities["CvssV3"]["Critical"] == 1
+        assert project.vulnerabilities["CvssV3"]["High"] == 1
+        assert project.vulnerabilities["CvssV2"]["High"] == 2
+        assert project.vulnerabilities["CvssV2"]["Unknown"] == 4
 
     def test_get_project_inventory(self,client):
         project_id = 1
-        fake_json = """
+        fake_response_json = """
 { "projectId": 1, "inventoryItems": [
     {"itemNumber":1, "id":1234, "name":"Example component","type":"component","priority":"low","createdBy":"Zach","createdOn":"Today","updatedOn":"Tomorrow","componentName":"snakeyaml","componentVersionName":"2.0"},
     {"itemNumber":2, "id":1235, "name":"Example component 2","type":"component","priority":"low","createdBy":"Zach","createdOn":"Today","updatedOn":"Tomorrow","componentName":"snakeyaml","componentVersionName":"2.0"}
@@ -50,18 +88,48 @@ class TestCodeInsightClient:
 """
         with requests_mock.Mocker() as m:
             m.get(f"{TEST_URL}/codeinsight/api/project/inventory/{project_id}",
-                text=fake_json)
-            projectInventory = client.project_inventory.get(project_id)
-        print(projectInventory)
+                text=fake_response_json)
+            projectInventory = client.projects.get_inventory(project_id)
         assert projectInventory.projectId == project_id
         assert len(projectInventory.inventoryItems) >= 2
-    
 
-    ## Coming soon features ##
-    def test_inventories(self, client):
-        with pytest.raises(NotImplementedError):
-            client.inventories() != None
+    #### FIX THIS! ####
+    def test_get_project_inventory_summary(self,client):
+        project_id = 1
+        fake_response_json = """ { "data": [
+            {
+                "itemNumber": 1,
+                "id": 12345,
+                "name": "Inventory Item 1",
+                "type":"component",
+                "priority":"low",
+                "createdBy":"Zach",
+                "createdOn":"Today",
+                "updatedOn":"Tomorrow",
+                "componentName":"snakeyaml",
+                "componentVersionName":"2.0"
+            },
+            {
+                "itemNumber": 2,
+                "id": 12346,
+                "name": "Inventory Item 2",
+                "type":"component",
+                "priority":"low",
+                "createdBy":"Zach",
+                "createdOn":"Today",
+                "updatedOn":"Tomorrow",
+                "componentName":"snakeyaml",
+                "componentVersionName":"2.0"
+            }
+            ]
     
-    def test_vulnerabilities(self, client):
-        with pytest.raises(NotImplementedError):
-            client.vulnerabilites() != None
+        }
+        """
+        with requests_mock.Mocker() as m:
+            m.get(f"{TEST_URL}/codeinsight/api/projects/{project_id}/inventorySummary",
+                text=fake_response_json)
+            project_inventory_summary = client.projects.get_inventory_summary(project_id)
+
+        assert len(project_inventory_summary) == 2
+        assert project_inventory_summary[1].id == 12346
+

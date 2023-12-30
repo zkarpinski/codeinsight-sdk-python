@@ -9,11 +9,13 @@ logger = logging.getLogger(__name__)
 class CodeInsightClient:
     def __init__(self,
                  base_url: str,
-                 api_token: str
+                 api_token: str,
+                 page_size: int = 100
                  ):
         self.base_url = base_url
         self.api_url = f"{base_url}/codeinsight/api"
         self.api_token = api_token
+        self.page_size = page_size
         self.api_headers = {
             'Content-Type': 'application/json',
             "Authorization": "Bearer %s" % self.api_token,
@@ -35,11 +37,7 @@ class CodeInsightClient:
     def projects(self) -> Handler:
         return Handler.create(self, Project)
     
-    @property
-    def project_inventory(self) -> Handler:
-        return Handler.create(self, ProjectInventory)
     
-
     # Coming soon...?
     def inventories(self):
         raise NotImplementedError("Inventories are not yet implemented")
