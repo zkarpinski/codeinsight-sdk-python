@@ -42,6 +42,18 @@ class ProjectInventoryItem(DataClassJsonMixin):
 
 @dataclass_json #Trying this style instead of DataClassJsonMixin
 @dataclass
-class ProjectInventory(DataClassJsonMixin):
+class ProjectInventory():
     projectId: int
     inventoryItems: List[ProjectInventoryItem]
+
+@dataclass
+class Report(DataClassJsonMixin):
+    id: int
+    name: str
+    path: str
+    default: bool
+    enabled: bool
+    enableProjectPicker: bool
+    order: int
+    createdDateTime: str
+    updatedDateTime: str

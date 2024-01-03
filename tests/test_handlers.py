@@ -17,3 +17,8 @@ class TestHandlers(object):
         project_handler = Handler.create(client, Project)
         assert isinstance(project_handler, ProjectHandler)
         assert issubclass(ProjectHandler, Handler)
+    
+    def test_report_handler(self, client):
+        _handler = Handler.create(client, Report)
+        assert isinstance(_handler, ReportHandler)
+        assert issubclass(ReportHandler, Handler)

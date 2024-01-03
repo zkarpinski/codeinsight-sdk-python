@@ -33,10 +33,6 @@ class TestNotImplemented(object):
         with pytest.raises(NotImplementedError):
             client.rules() != None
 
-    def test_reports(self, client):
-        with pytest.raises(NotImplementedError):
-            client.reports() != None
-
     def test_files(self, client):
         with pytest.raises(NotImplementedError):
             client.files() != None

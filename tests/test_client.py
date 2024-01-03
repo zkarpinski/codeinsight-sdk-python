@@ -5,6 +5,7 @@ import requests_mock
 
 
 from codeinsight_sdk import CodeInsightClient
+from codeinsight_sdk.exceptions import CodeInsightError
 
 logger = logging.getLogger(__name__)
 
@@ -36,9 +37,22 @@ class TestCodeInsightClient:
     def test_get_project_id(self,client):
         projectName = "Test"
         with requests_mock.Mocker() as m:
-            m.get(f"{TEST_URL}/codeinsight/api/project/id", text='{ "Content": 1 }')
+            m.get(f"{TEST_URL}/codeinsight/api/project/id", text='{ "Content: ": 1 }') # Yes, the key is called 'Content: ' ...
             project_id = client.projects.get_id(projectName)
         assert project_id == 1
+
+    def test_get_project_id_invalid(self,client):
+        projectName = "Invalid_Project"
+        fake_response_json = """{ "Arguments: " : ["",""],
+            "Key: ": " InvalidProjectNameParm",
+            "Error: ": "The project name entered was not found" }
+"""
+        with requests_mock.Mocker() as m:
+             # Note, the key names end with a colon and space '...: ' 
+            m.get(f"{TEST_URL}/codeinsight/api/project/id", text=fake_response_json, status_code=400)
+            with pytest.raises(CodeInsightError):
+                project_id = client.projects.get_id(projectName)
+                assert project_id != 1
     
     def test_get_project(self,client):
         project_id = 1
@@ -132,4 +146,63 @@ class TestCodeInsightClient:
 
         assert len(project_inventory_summary) == 2
         assert project_inventory_summary[1].id == 12346
+
+    def test_get_reports_all(self,client):
+        fake_response_json = """ { "data": [
+            {
+                "id": 1,
+                "name": "Report 1",
+                "path": "path/to/report",
+                "default": true,
+                "enabled": true,
+                "enableProjectPicker": true,
+                "order": 1,
+                "createdDateTime": "Today",
+                "updatedDateTime": "Tomorrow"
+            },
+            {
+                "id": 2,
+                "name": "Report 2",
+                "path": "path/to/report",
+                "default": false,
+                "enabled": false,
+                "enableProjectPicker": false,
+                "order": 2,
+                "createdDateTime": "Today",
+                "updatedDateTime": "Tomorrow"
+            }
+            ]
+    
+        }
+        """
+        with requests_mock.Mocker() as m:
+            m.get(f"{TEST_URL}/codeinsight/api/reports",
+                text=fake_response_json)
+            reports = client.reports.all()
+        assert len(reports) == 2
+        assert reports[1].id == 2
+        assert reports[1].enabled == False
+
+    def test_get_report(self,client):
+        report_id = 1
+        fake_response_json = """ { "data":
+            {
+                "id": 1,
+                "name": "Report 1",
+                "path": "path/to/report",
+                "default": true,
+                "enabled": true,
+                "enableProjectPicker": true,
+                "order": 1,
+                "createdDateTime": "Today",
+                "updatedDateTime": "Tomorrow"
+            }
+        }
+        """
+        with requests_mock.Mocker() as m:
+            m.get(f"{TEST_URL}/codeinsight/api/reports/{report_id}",
+                text=fake_response_json)
+            report = client.reports.get(1)
+        assert report.id == 1
+        assert report.enabled == True
 

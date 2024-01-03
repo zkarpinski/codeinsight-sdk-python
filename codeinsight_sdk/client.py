@@ -2,7 +2,8 @@ import requests
 import logging
 
 from .handlers import Handler
-from .models import Project, ProjectInventory
+from .models import Project, ProjectInventory, Report
+from .exceptions import CodeInsightError
 
 logger = logging.getLogger(__name__)
 
@@ -29,13 +30,17 @@ class CodeInsightClient:
         if not response.ok:
             logger.error(f"Error: {response.status_code} - {response.reason}")
             logger.error(response.text)
-            raise response.raise_for_status()      
+            raise CodeInsightError(response)   
 
         return response
 
     @property
     def projects(self) -> Handler:
         return Handler.create(self, Project)
+    
+    @property
+    def reports(self) -> Handler:
+        return Handler.create(self, Report)
     
     
     # Coming soon...?
@@ -55,9 +60,6 @@ class CodeInsightClient:
         raise NotImplementedError
     
     def rules(self):
-        raise NotImplementedError
-    
-    def reports(self):
         raise NotImplementedError
     
     def files(self):
