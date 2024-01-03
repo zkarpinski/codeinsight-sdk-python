@@ -34,25 +34,24 @@ class TestCodeInsightClient:
             projects = client.projects.all()
         assert len(projects) > 0
 
-    def test_get_project_id(self,client):
-        projectName = "Test"
+    def test_get_project_id(self, client):
+        project_name = "Test"
         with requests_mock.Mocker() as m:
             m.get(f"{TEST_URL}/codeinsight/api/project/id", text='{ "Content: ": 1 }') # Yes, the key is called 'Content: ' ...
-            project_id = client.projects.get_id(projectName)
+            project_id = client.projects.get_id(project_name)
         assert project_id == 1
 
     def test_get_project_id_invalid(self,client):
-        projectName = "Invalid_Project"
+        project_name = "Invalid_Project"
         fake_response_json = """{ "Arguments: " : ["",""],
             "Key: ": " InvalidProjectNameParm",
             "Error: ": "The project name entered was not found" }
 """
         with requests_mock.Mocker() as m:
-             # Note, the key names end with a colon and space '...: ' 
+                # Note, the key names end with a colon and space '...: ' 
             m.get(f"{TEST_URL}/codeinsight/api/project/id", text=fake_response_json, status_code=400)
             with pytest.raises(CodeInsightError):
-                project_id = client.projects.get_id(projectName)
-                assert project_id != 1
+                client.projects.get_id(project_name)
     
     def test_get_project(self,client):
         project_id = 1

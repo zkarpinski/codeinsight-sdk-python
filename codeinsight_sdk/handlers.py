@@ -17,7 +17,7 @@ class Handler(abc.ABC):
             }
         handler = handlers.get(k)
         if handler is None:
-            raise Exception(f"Handler not found for class '{k}'")
+            raise ValueError(f"Handler not found for class '{k}'")
         return handler(client, cls)
     
     @abc.abstractmethod
@@ -56,7 +56,7 @@ class ProjectHandler(Handler):
             project_data = resp.json()['data']
             return self.cls.from_dict(project_data)
     
-    def get_id(self, projectName:str) -> int:
+    def get_id(self, project_name:str) -> int:
             """
             Retrieves the ID of a project based on its name.
 
@@ -66,15 +66,14 @@ class ProjectHandler(Handler):
             Returns:
                 int: The ID of the project.
             """
-            path = f"project/id"
-            params = {"projectName": projectName}
+            path = "project/id"
+            params = {"projectName": project_name}
             resp = self.client.request("GET", url_part=path, params=params)
             try:
-                projectId = resp.json()['Content: '] # Yes, the key is called 'Content: ' ...
+                project_id = resp.json()['Content: '] # Yes, the key is called 'Content: ' ...
             except KeyError:
                 raise CodeInsightError(resp)
-                #raise Exception(f"Content key not found in response: {resp.json()}")
-            return projectId
+            return project_id
     
     def get_inventory_summary(self, project_id:int) -> List[ProjectInventoryItem]:
             """

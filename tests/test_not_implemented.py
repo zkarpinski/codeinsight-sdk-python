@@ -11,32 +11,32 @@ class TestNotImplemented(object):
     ## Coming soon features ##
     def test_inventories(self, client):
         with pytest.raises(NotImplementedError):
-            client.inventories() != None
+            client.inventories()
     
     def test_vulnerabilities(self, client):
         with pytest.raises(NotImplementedError):
-            client.vulnerabilites() != None
+            client.vulnerabilites()
     
     def test_users(self, client):
         with pytest.raises(NotImplementedError):
-            client.users() != None
+            client.users()
     
     def test_licenses(self, client):
         with pytest.raises(NotImplementedError):
-            client.licenses() != None
+            client.licenses()
 
     def test_tasks(self, client):
         with pytest.raises(NotImplementedError):
-            client.tasks() != None
+            client.tasks()
 
     def test_rules(self, client):
         with pytest.raises(NotImplementedError):
-            client.rules() != None
+            client.rules()
 
     def test_files(self, client):
         with pytest.raises(NotImplementedError):
-            client.files() != None
+            client.files()
 
     def test_folders(self, client):
         with pytest.raises(NotImplementedError):
-            client.folders() != None
+            client.folders()

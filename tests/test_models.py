@@ -10,13 +10,22 @@ class TestProject(object):
     def test_project(self, project):
         assert project.id == 1
         assert project.name == "Test"
+        assert isinstance(project, Project)
     
-
-@pytest.mark.skip(reason="Not implemented")
 class TestReport(object):
     @pytest.fixture
     def report(self):
-        return Report(id=1)
+        return Report(id=1,
+                        name="Test",
+                        path="path/to/report",
+                        default=True,
+                        enabled=True,
+                        enableProjectPicker=True,
+                        order=1,
+                        createdDateTime="Today",
+                        updatedDateTime="Tomorrow")
     
     def test_report(self, report):
         assert report.id == 1
+        assert report.enabled == True
+        assert isinstance(report, Report)

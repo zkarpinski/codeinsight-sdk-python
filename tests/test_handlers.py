@@ -1,8 +1,8 @@
 import pytest
 
 from codeinsight_sdk import CodeInsightClient
-from codeinsight_sdk.handlers import *
-from codeinsight_sdk.models import *
+from codeinsight_sdk.handlers import Handler, ProjectHandler, ReportHandler
+from codeinsight_sdk.models import Project, Report
 
 class TestHandlers(object):
     @pytest.fixture
