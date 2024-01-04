@@ -75,22 +75,47 @@ class ProjectHandler(Handler):
                 raise CodeInsightError(resp)
             return project_id
     
-    def get_inventory_summary(self, project_id:int) -> List[ProjectInventoryItem]:
+    def get_inventory_summary(self, project_id:int,
+                                  vulnerabilitySummary : bool = False,
+                                  cvssVersion: str = 'ANY',
+                                  published: str = 'ALL',
+                                  offset:int = 1,
+                                  limit:int = 25) -> List[ProjectInventoryItem]:
             """
             Retrieves the inventory summary for a specific project.
 
             Args:
                 project_id (int): The ID of the project.
+                vulnerabilitySummary (bool, optional): Flag to include vulnerability summary. Defaults to False.
+                cvssVersion (str, optional): The CVSS version to filter vulnerabilities. Defaults to 'ANY'.
+                published (str, optional): The publication status. Defaults to 'ALL'.
+                offset (int, optional): The offset for pagination. Defaults to 1.
+                limit (int, optional): The maximum number of items to return. Defaults to 25.
 
             Returns:
                 List[ProjectInventoryItem]: A list of ProjectInventoryItem objects representing the inventory summary.
             """
-            
             path = f"projects/{project_id}/inventorySummary"
-            resp = self.client.request("GET", url_part=path)
+            params = {"vulnerabilitySummary": vulnerabilitySummary,
+                    "cvssVersion": cvssVersion,
+                    "published": published,
+                    "offset": offset,
+                    "limit": limit         
+            }
+            resp = self.client.request("GET", url_part=path, params=params)
+            current_page = int(resp.headers['current-page'])
+            number_of_pages = int(resp.headers['number-of-pages'])
+            total_records = int(resp.headers['total-records'])
             inventory = []
             for inv_item in resp.json()['data']:
                 inventory.append(ProjectInventoryItem.from_dict(inv_item))
+            
+            # Iterate through all the pages
+            if number_of_pages > offset:
+                params.update({"offset": offset+1})
+                chunk = self.get_inventory_summary(project_id, **params)
+                # Only append the inventory records
+                inventory.extend(chunk)
             return inventory
     
     def get_inventory(self,project_id:int,
@@ -105,12 +130,27 @@ class ProjectHandler(Handler):
                       include_files: bool = True
                       ) -> ProjectInventory:
         path = f"project/inventory/{project_id}"
-        #TODO: Add support for all parameters
-        params = {"skipVulnerabilities": skip_vulnerabilities}
+        params = {"skipVulnerabilities": skip_vulnerabilities,
+                    "published": published,
+                    "vendor": vendor,
+                    "product": product,
+                    "page": page,
+                    "pageSize": page_size,
+                    "reviewStatus": review_status,
+                    "alerts": alerts,
+                    "includeFiles": include_files}
+
         resp = self.client.request("GET", url_part=path, params=params)
         project_inventory = resp.json()
-        project_cls = ProjectInventory.from_dict(project_inventory)
-        return project_cls
+        project = ProjectInventory.from_dict(project_inventory)
+
+        # Iterate through all the pages
+        if int(resp.headers['number-of-pages']) > page:
+            chunk = self.get_inventory(project_id, page=page+1)
+            # Only append the inventory records
+            project.inventoryItems.extend(chunk.inventoryItems)
+
+        return project
 
 
 class ReportHandler(Handler):

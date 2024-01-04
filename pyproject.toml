@@ -1,12 +1,15 @@
 [tool.poetry]
 name = "codeinsight_sdk"
-version = "0.0.3"
+version = "0.0.4"
 description = "A Python client for the Revenera Code Insight"
 authors = ["Zachary Karpinski <1206496+zkarpinski@users.noreply.github.com>"]
 readme = "README.md"
 license = "Apache-2.0"
 repository = "https://github.com/zkarpinski/codeinsight-sdk-python"
 keywords = ["revenera", "api", "flexera", "code insight","sdk"]
+include = [
+    { path = "tests", format = "sdist" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"

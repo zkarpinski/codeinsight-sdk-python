@@ -26,8 +26,12 @@ class TestCodeInsightClient:
             m.get(f"{TEST_URL}/codeinsight/api/projects", status_code=404)
             with pytest.raises(Exception):
                 client.projects.all()
-    
-    
+
+class TestProjectEndpoints:
+    @pytest.fixture
+    def client(self):
+        return CodeInsightClient(TEST_URL, TEST_API_TOKEN)
+   
     def test_get_all_projects(self, client):
         with requests_mock.Mocker() as m:
             m.get(f"{TEST_URL}/codeinsight/api/projects", text='{"data": [{"id":1, "name":"Test"}, {"id":2, "name":"Test 2"}]}')
@@ -46,9 +50,9 @@ class TestCodeInsightClient:
         fake_response_json = """{ "Arguments: " : ["",""],
             "Key: ": " InvalidProjectNameParm",
             "Error: ": "The project name entered was not found" }
-"""
+        """
         with requests_mock.Mocker() as m:
-                # Note, the key names end with a colon and space '...: ' 
+            # Note, the key names end with a colon and space '...: ' 
             m.get(f"{TEST_URL}/codeinsight/api/project/id", text=fake_response_json, status_code=400)
             with pytest.raises(CodeInsightError):
                 client.projects.get_id(project_name)
@@ -91,24 +95,37 @@ class TestCodeInsightClient:
         assert project.vulnerabilities["CvssV2"]["High"] == 2
         assert project.vulnerabilities["CvssV2"]["Unknown"] == 4
 
-    def test_get_project_inventory(self,client):
+    def test_get_project_inventory_multipage(self,client):
         project_id = 1
+        total_pages = 4
+        total_records = total_pages * 2
+        response_header = {"content-type": "application/json"}
+        response_header["current-page"] = "1"
+        response_header["number-of-pages"] = str(total_pages)
+        response_header["total-records"] = str(total_records)
+
         fake_response_json = """
-{ "projectId": 1, "inventoryItems": [
-    {"itemNumber":1, "id":1234, "name":"Example component","type":"component","priority":"low","createdBy":"Zach","createdOn":"Today","updatedOn":"Tomorrow","componentName":"snakeyaml","componentVersionName":"2.0"},
-    {"itemNumber":2, "id":1235, "name":"Example component 2","type":"component","priority":"low","createdBy":"Zach","createdOn":"Today","updatedOn":"Tomorrow","componentName":"snakeyaml","componentVersionName":"2.0"}
-    ]}
-"""
+        { "projectId": 1, "inventoryItems": [
+            {"itemNumber":1, "id":1234, "name":"Example component","type":"component","priority":"low","createdBy":"Zach","createdOn":"Today","updatedOn":"Tomorrow","componentName":"snakeyaml","componentVersionName":"2.0"},
+            {"itemNumber":2, "id":1235, "name":"Example component 2","type":"component","priority":"low","createdBy":"Zach","createdOn":"Today","updatedOn":"Tomorrow","componentName":"snakeyaml","componentVersionName":"2.0"}
+            ]}
+        """
         with requests_mock.Mocker() as m:
             m.get(f"{TEST_URL}/codeinsight/api/project/inventory/{project_id}",
-                text=fake_response_json)
-            projectInventory = client.projects.get_inventory(project_id)
-        assert projectInventory.projectId == project_id
-        assert len(projectInventory.inventoryItems) >= 2
+                text=fake_response_json, headers=response_header)
+            project_inventory = client.projects.get_inventory(project_id)
+        assert project_inventory.projectId == project_id
+        assert len(project_inventory.inventoryItems) == total_records
 
     #### FIX THIS! ####
     def test_get_project_inventory_summary(self,client):
         project_id = 1
+        total_pages = 4
+        total_records = total_pages * 2
+        response_header = {"content-type": "application/json"}
+        response_header["current-page"] = "1"
+        response_header["number-of-pages"] = str(total_pages)
+        response_header["total-records"] = str(total_records)
         fake_response_json = """ { "data": [
             {
                 "itemNumber": 1,
@@ -140,12 +157,17 @@ class TestCodeInsightClient:
         """
         with requests_mock.Mocker() as m:
             m.get(f"{TEST_URL}/codeinsight/api/projects/{project_id}/inventorySummary",
-                text=fake_response_json)
+                text=fake_response_json, headers=response_header)
             project_inventory_summary = client.projects.get_inventory_summary(project_id)
 
-        assert len(project_inventory_summary) == 2
+        assert len(project_inventory_summary) == 8
         assert project_inventory_summary[1].id == 12346
 
+class TestReportsEndpoints:
+    @pytest.fixture
+    def client(self):
+        return CodeInsightClient(TEST_URL, TEST_API_TOKEN)
+    
     def test_get_reports_all(self,client):
         fake_response_json = """ { "data": [
             {
@@ -204,4 +226,3 @@ class TestCodeInsightClient:
             report = client.reports.get(1)
         assert report.id == 1
         assert report.enabled == True
-

@@ -11,21 +11,27 @@ class CodeInsightClient:
     def __init__(self,
                  base_url: str,
                  api_token: str,
-                 page_size: int = 100
                  ):
         self.base_url = base_url
         self.api_url = f"{base_url}/codeinsight/api"
-        self.api_token = api_token
-        self.page_size = page_size
-        self.api_headers = {
+        self.__api_token = api_token
+        self.__api_headers = {
             'Content-Type': 'application/json',
-            "Authorization": "Bearer %s" % self.api_token,
+            "Authorization": "Bearer %s" % self.__api_token,
             "User-Agent": "codeinsight_sdk_python",
         }
 
     def request(self, method, url_part: str, params: dict = None):
         url = f"{self.api_url}/{url_part}"
-        response = requests.request(method, url, headers=self.api_headers, params=params)
+
+        # Iterate over params and remove any that are None (Empty)
+        if(params):
+            for k, v in list(params.items()):
+                if v is None:
+                    del params[k]
+
+        response = requests.request(method, url,
+                                     headers=self.__api_headers, params=params)
 
         if not response.ok:
             logger.error(f"Error: {response.status_code} - {response.reason}")
