@@ -1,7 +1,7 @@
 import requests
 import logging
 
-from .handlers import Handler
+from .handlers import ProjectHandler, Handler, ReportHandler
 from .models import Project, ProjectInventory, Report
 from .exceptions import CodeInsightError
 
@@ -21,7 +21,7 @@ class CodeInsightClient:
             "User-Agent": "codeinsight_sdk_python",
         }
 
-    def request(self, method, url_part: str, params: dict = None):
+    def request(self, method, url_part: str, params: dict = None, body: any = None ):
         url = f"{self.api_url}/{url_part}"
 
         # Iterate over params and remove any that are None (Empty)
@@ -31,7 +31,7 @@ class CodeInsightClient:
                     del params[k]
 
         response = requests.request(method, url,
-                                     headers=self.__api_headers, params=params)
+                                     headers=self.__api_headers, params=params, json=body)
 
         if not response.ok:
             logger.error(f"Error: {response.status_code} - {response.reason}")
@@ -41,12 +41,12 @@ class CodeInsightClient:
         return response
 
     @property
-    def projects(self) -> Handler:
-        return Handler.create(self, Project)
+    def projects(self) -> ProjectHandler:
+        return ProjectHandler(self)
     
     @property
-    def reports(self) -> Handler:
-        return Handler.create(self, Report)
+    def reports(self) -> ReportHandler:
+        return ReportHandler(self)
     
     
     # Coming soon...?

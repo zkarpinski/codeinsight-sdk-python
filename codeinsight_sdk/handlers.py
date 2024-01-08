@@ -1,13 +1,13 @@
 import abc
 from typing import List
 
-from codeinsight_sdk.models import Project, ProjectInventory, ProjectInventoryItem
+from codeinsight_sdk.models import Project, ProjectInventory, ProjectInventoryItem, Report
 from codeinsight_sdk.exceptions import CodeInsightError
 
 class Handler(abc.ABC):
-    def __init__(self, client, cls):
+    def __init__(self, client):
         self.client = client
-        self.cls = cls
+        self.cls = None
     
     @staticmethod
     def create(client, cls):
@@ -18,13 +18,17 @@ class Handler(abc.ABC):
         handler = handlers.get(k)
         if handler is None:
             raise ValueError(f"Handler not found for class '{k}'")
-        return handler(client, cls)
+        return handler(client)
     
     @abc.abstractmethod
     def get(self):
         pass
 
 class ProjectHandler(Handler):
+    def __init__(self, client):
+        super().__init__(client)
+        self.cls = Project       
+    
     #Note API endpoints switch between projects and project...
     def all(self) -> List[Project]:
             """
@@ -154,6 +158,10 @@ class ProjectHandler(Handler):
 
 
 class ReportHandler(Handler):
+    def __init__(self, client):
+        super().__init__(client)
+        self.cls = Report
+    
     def get(self, id:int):
         path = f"reports/{id}"
         resp = self.client.request("GET", url_part=path)
