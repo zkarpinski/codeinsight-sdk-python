@@ -1,0 +1,2 @@
+[master]
+ignore-patterns=test_.*?py

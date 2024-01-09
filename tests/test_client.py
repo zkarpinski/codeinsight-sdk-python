@@ -31,6 +31,13 @@ class TestProjectEndpoints:
     @pytest.fixture
     def client(self):
         return CodeInsightClient(TEST_URL, TEST_API_TOKEN)
+    
+    def test_create_project(self, client):
+        project_name = "Test"
+        with requests_mock.Mocker() as m:
+            m.post(f"{TEST_URL}/codeinsight/api/projects", text='{"data": {"id":1}}')
+            project_id = client.projects.create(project_name)
+        assert project_id == 1
    
     def test_get_all_projects(self, client):
         with requests_mock.Mocker() as m:
@@ -162,6 +169,7 @@ class TestProjectEndpoints:
 
         assert len(project_inventory_summary) == 8
         assert project_inventory_summary[1].id == 12346
+
 
 class TestReportsEndpoints:
     @pytest.fixture
