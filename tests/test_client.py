@@ -113,7 +113,7 @@ class TestProjectEndpoints:
 
         fake_response_json = """
         { "projectId": 1, "inventoryItems": [
-            {"itemNumber":1, "id":1234, "name":"Example component","type":"component","priority":"low","createdBy":"Zach","createdOn":"Today","updatedOn":"Tomorrow","componentName":"snakeyaml","componentVersionName":"2.0"},
+            {"itemNumber":1, "id":1234, "name":"Example component","type":"component","priority":"low","createdBy":"Zach","createdOn":"Today","updatedOn":"Tomorrow","componentName":"snakeyaml","componentVersionName":"2.0","vulnerabilities":[{"vulnerabilityId":1,"vulnerabilityName":"CVE-2020-1234","vulnerabilityDescription":"Example vulnerability","vulnerabilityCvssV3Score":9.8,"vulnerabilityCvssV3Severity":"Critical"}]},
             {"itemNumber":2, "id":1235, "name":"Example component 2","type":"component","priority":"low","createdBy":"Zach","createdOn":"Today","updatedOn":"Tomorrow","componentName":"snakeyaml","componentVersionName":"2.0"}
             ]}
         """
@@ -123,6 +123,7 @@ class TestProjectEndpoints:
             project_inventory = client.projects.get_inventory(project_id)
         assert project_inventory.projectId == project_id
         assert len(project_inventory.inventoryItems) == total_records
+        assert project_inventory.inventoryItems[0].vulnerabilities[0].vulnerabilityName == "CVE-2020-1234"
 
     #### FIX THIS! ####
     def test_get_project_inventory_summary(self,client):
