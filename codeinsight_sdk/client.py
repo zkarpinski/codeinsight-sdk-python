@@ -11,6 +11,8 @@ class CodeInsightClient:
     def __init__(self,
                  base_url: str,
                  api_token: str,
+                 timeout: int = 60,
+                 verify_ssl: bool = True
                  ):
         self.base_url = base_url
         self.api_url = f"{base_url}/codeinsight/api"
@@ -20,6 +22,8 @@ class CodeInsightClient:
             "Authorization": "Bearer %s" % self.__api_token,
             "User-Agent": "codeinsight_sdk_python",
         }
+        self.__timeout = timeout
+        self.__verify_ssl = verify_ssl
 
     def request(self, method, url_part: str, params: dict = None, body: any = None ):
         url = f"{self.api_url}/{url_part}"
@@ -31,10 +35,11 @@ class CodeInsightClient:
                     del params[k]
 
         response = requests.request(method, url,
-                                     headers=self.__api_headers, params=params, json=body)
+                                     headers=self.__api_headers, params=params, json=body,
+                                     timeout=self.__timeout, verify=self.__verify_ssl)
 
         if not response.ok:
-            logger.error(f"Error: {response.status_code} - {response.reason}")
+            logger.error(f"Error: {response.status_code} - {response.reason}", exc_info=True)
             logger.error(response.text)
             raise CodeInsightError(response)   
 
