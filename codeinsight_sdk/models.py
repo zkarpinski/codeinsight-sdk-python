@@ -38,7 +38,7 @@ class ProjectInventoryItem(DataClassJsonMixin):
     url: Optional[str] = None
     componentUrl: Optional[str] = None
     componentDescription: Optional[str] = None
-    vulnerabilites: Optional[List[Vulnerability]] = None
+    vulnerabilities: Optional[List[Vulnerability]] = None
     vulnerabilitySummary: Optional[Dict[str, Dict]] = None
     filePaths: Optional[List[str]] = None
 
