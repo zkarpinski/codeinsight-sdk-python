@@ -8,7 +8,7 @@ class Handler(abc.ABC):
     def __init__(self, client):
         self.client = client
         self.cls = None
-    
+
     @staticmethod
     def create(client, cls):
         k = cls.__name__
@@ -19,7 +19,7 @@ class Handler(abc.ABC):
         if handler is None:
             raise ValueError(f"Handler not found for class '{k}'")
         return handler(client)
-    
+
     @abc.abstractmethod
     def get(self):
         pass
@@ -79,7 +79,7 @@ class ProjectHandler(Handler):
         for project_data in resp.json()['data']:
             projects.append(self.cls.from_dict(project_data))
         return projects
-    
+
     def get(self, id:int) -> Project:
         """
         Retrieves a project by its ID.
@@ -94,7 +94,7 @@ class ProjectHandler(Handler):
         resp = self.client.request("GET", url_part=path)
         project_data = resp.json()['data']
         return self.cls.from_dict(project_data)
-    
+
     def get_id(self, project_name:str) -> int:
         """
         Retrieves the ID of a project based on its name.
@@ -190,7 +190,24 @@ class ProjectHandler(Handler):
             project.inventoryItems.extend(chunk.inventoryItems)
 
         return project
-
+    
+    def upload_codebase(self, project_id:int,
+                        codebase_path:str,
+                        deleteExistingFileOnServer: bool = False,
+                        expansionLevel: int = 1,
+                        deleteArchiveAfterExpand: bool = False,
+                        archiveDirSuffix: str = None,
+                        ) -> int:
+        path = "project/uploadProjectCodebase"
+        params = {"projectId": project_id,
+                    "deleteExistingFileOnServer": deleteExistingFileOnServer,
+                    "expansionLevel": expansionLevel,
+                    "deleteArchiveAfterExpand": deleteArchiveAfterExpand,
+                    "archiveDirSuffix": archiveDirSuffix}
+        code_file = {"file": open(codebase_path, 'rb')}
+        content_type = "application/octet-stream"
+        resp = self.client.request("POST", url_part=path, params=params, data=code_file,content_type=content_type)
+        return resp.status_code
 
 class ReportHandler(Handler):
     """
