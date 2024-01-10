@@ -124,6 +124,14 @@ class TestProjectEndpoints:
         assert project_inventory.projectId == project_id
         assert len(project_inventory.inventoryItems) == total_records
         assert project_inventory.inventoryItems[0].vulnerabilities[0].vulnerabilityName == "CVE-2020-1234"
+    
+    def test_upload_codebase(self,client):
+        project_id = 1
+        codebase_path = "tests/resources/test_codebase.zip"
+        with requests_mock.Mocker() as m:
+            m.post(f"{TEST_URL}/codeinsight/api/project/uploadProjectCodebase", text='{"data": {"id":1}}')
+            resp = client.projects.upload_codebase(project_id, codebase_path)
+        assert resp == 200
 
     #### FIX THIS! ####
     def test_get_project_inventory_summary(self,client):

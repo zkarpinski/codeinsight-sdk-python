@@ -1,8 +1,7 @@
 import requests
 import logging
 
-from .handlers import ProjectHandler, Handler, ReportHandler
-from .models import Project, ProjectInventory, Report
+from .handlers import ProjectHandler, ReportHandler
 from .exceptions import CodeInsightError
 
 logger = logging.getLogger(__name__)
@@ -25,7 +24,7 @@ class CodeInsightClient:
         self.__timeout = timeout
         self.__verify_ssl = verify_ssl
 
-    def request(self, method, url_part: str, params: dict = None, body: any = None ):
+    def request(self, method, url_part: str, params: dict = None, body: any = None, data: any = None, content_type: str = None):
         url = f"{self.api_url}/{url_part}"
 
         # Iterate over params and remove any that are None (Empty)
@@ -34,8 +33,13 @@ class CodeInsightClient:
                 if v is None:
                     del params[k]
 
+        # Update headers if content_type is specified
+        headers = self.__api_headers
+        if content_type:
+            headers['Content-Type'] = content_type
+
         response = requests.request(method, url,
-                                     headers=self.__api_headers, params=params, json=body,
+                                     headers=self.__api_headers, params=params, json=body, data=data,
                                      timeout=self.__timeout, verify=self.__verify_ssl)
 
         if not response.ok:
