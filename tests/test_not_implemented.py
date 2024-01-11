@@ -8,11 +8,7 @@ class TestNotImplemented(object):
     def client(self):
         return CodeInsightClient("","")
 
-    ## Coming soon features ##
-    def test_inventories(self, client):
-        with pytest.raises(NotImplementedError):
-            client.inventories()
-    
+    ## Coming soon features ##    
     def test_vulnerabilities(self, client):
         with pytest.raises(NotImplementedError):
             client.vulnerabilites()

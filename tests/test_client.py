@@ -20,6 +20,9 @@ class TestCodeInsightClient:
     
     def test_client(self, client):
         assert client.base_url == TEST_URL
+    
+    def test_client_expertimental_disabled(self, client):
+        assert client.experimental_enabled == False
 
     def test_endpoint_not_found(self, client):
         with requests_mock.Mocker() as m:
@@ -168,7 +171,6 @@ class TestProjectEndpoints:
                 "componentVersionName":"2.0"
             }
             ]
-    
         }
         """
         with requests_mock.Mocker() as m:
