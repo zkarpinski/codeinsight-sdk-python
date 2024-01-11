@@ -1,3 +1,6 @@
+# pylint: disable=invalid-name
+# Disable invalid name because the API uses camelCase
+
 from dataclasses import dataclass
 from dataclasses_json import DataClassJsonMixin, dataclass_json
 from typing import Any, Optional, List, Dict
@@ -39,7 +42,7 @@ class ProjectInventoryItem(DataClassJsonMixin):
     componentUrl: Optional[str] = None
     componentDescription: Optional[str] = None
     vulnerabilities: Optional[List[Vulnerability]] = None
-    vulnerabilitySummary: Optional[Dict[str, Dict]] = None
+    vulnerabilitySummary: Optional[List[Dict[str, Dict]]] = None
     filePaths: Optional[List[str]] = None
 
 @dataclass_json #Trying this style instead of DataClassJsonMixin

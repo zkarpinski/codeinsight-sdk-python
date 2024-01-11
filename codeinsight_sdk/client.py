@@ -3,16 +3,22 @@ import logging
 
 from .handlers import ProjectHandler, ReportHandler
 from .exceptions import CodeInsightError
+from .experimental import ExperimentalHandler
+from .handlers.inventory import InventoryHandler
 
 logger = logging.getLogger(__name__)
 
 class CodeInsightClient:
+    """Client for the code insight API."""
+
     def __init__(self,
                  base_url: str,
                  api_token: str,
                  timeout: int = 60,
-                 verify_ssl: bool = True
+                 verify_ssl: bool = True,
+                 experimental: bool = False
                  ):
+
         self.base_url = base_url
         self.api_url = f"{base_url}/codeinsight/api"
         self.__api_token = api_token
@@ -23,6 +29,7 @@ class CodeInsightClient:
         }
         self.__timeout = timeout
         self.__verify_ssl = verify_ssl
+        self.experimental_enabled = experimental
 
     def request(self, method, url_part: str, params: dict = None, body: any = None, data: any = None, content_type: str = None):
         url = f"{self.api_url}/{url_part}"
@@ -57,10 +64,20 @@ class CodeInsightClient:
     def reports(self) -> ReportHandler:
         return ReportHandler(self)
     
+    @property
+    def inventories(self):
+        return InventoryHandler(self)
+    
+    @property
+    def experimental(self) -> ExperimentalHandler:
+        if self.experimental_enabled == False:
+            raise CodeInsightError("Experimental API is not enabled for this instance")
+        else:
+            return ExperimentalHandler(self)
+    
     
     # Coming soon...?
-    def inventories(self):
-        raise NotImplementedError("Inventories are not yet implemented")
+
     
     def vulnerabilites(self):
         raise NotImplementedError
