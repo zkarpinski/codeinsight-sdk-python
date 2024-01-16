@@ -32,11 +32,21 @@ class ExperimentalHandler(Handler):
         item: ProjectInventoryItem
         vuln_items: list(ProjectInventoryItem) = []
         for item in inventory:
-            if item.vulnerabilitySummary is None:
+            if item.vulnerabilitySummary is None or len(item.vulnerabilitySummary) == 0:
                 continue
 
             # If the item has a vulnerability, get the vulnerability details for this item and append it
-            if sum(item.vulnerabilitySummary[0]["CvssV3"].values()) > 0:
+            item_vul_summary = item.vulnerabilitySummary[0]
+            k = ""
+            if "CvssV2" in item_vul_summary.keys():
+                k = "CvssV2"
+            elif "CvssV3" in item_vul_summary.keys():
+                k = "CvssV3"
+            else:
+                # If the item has no vulnerabilities, skip it
+                continue
+
+            if sum(item_vul_summary[k].values()) > 0:
                 vul_detail = self.client.inventories.get_inventory_vulnerabilities(
                     item.id
                 )

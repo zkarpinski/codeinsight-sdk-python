@@ -40,7 +40,8 @@ class TestExperimental:
                 "createdOn":"Today",
                 "updatedOn":"Tomorrow",
                 "componentName":"snakeyaml",
-                "componentVersionName":"2.0"
+                "componentVersionName":"2.0",
+                "vulnerabilitySummary": []
             },
             {
                 "itemNumber": 2,
