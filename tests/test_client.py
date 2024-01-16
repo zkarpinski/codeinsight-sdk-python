@@ -176,8 +176,6 @@ class TestProjectEndpoints:
                 "type":"component",
                 "priority":"low",
                 "createdBy":"Zach",
-                "createdOn":"Today",
-                "updatedOn":"Tomorrow",
                 "componentName":"snakeyaml",
                 "componentVersionName":"2.0"
             },
@@ -188,8 +186,6 @@ class TestProjectEndpoints:
                 "type":"component",
                 "priority":"low",
                 "createdBy":"Zach",
-                "createdOn":"Today",
-                "updatedOn":"Tomorrow",
                 "componentName":"snakeyaml",
                 "componentVersionName":"2.0"
             }
