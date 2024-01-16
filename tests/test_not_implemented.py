@@ -2,21 +2,21 @@ import pytest
 
 from codeinsight_sdk import CodeInsightClient
 
-class TestNotImplemented(object):
 
+class TestNotImplemented(object):
     @pytest.fixture
     def client(self):
-        return CodeInsightClient("","")
+        return CodeInsightClient("", "")
 
-    ## Coming soon features ##    
+    ## Coming soon features ##
     def test_vulnerabilities(self, client):
         with pytest.raises(NotImplementedError):
             client.vulnerabilites()
-    
+
     def test_users(self, client):
         with pytest.raises(NotImplementedError):
             client.users()
-    
+
     def test_licenses(self, client):
         with pytest.raises(NotImplementedError):
             client.licenses()

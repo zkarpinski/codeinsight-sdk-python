@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from dataclasses_json import DataClassJsonMixin, dataclass_json
 from typing import Any, Optional, List, Dict
 
+
 @dataclass
 class Project(DataClassJsonMixin):
     id: int
@@ -26,6 +27,7 @@ class Vulnerability(DataClassJsonMixin):
     vulnerabilityCvssV3Score: int
     vulnerabilityCvssV3Severity: str
 
+
 @dataclass
 class ProjectInventoryItem(DataClassJsonMixin):
     itemNumber: int
@@ -45,11 +47,13 @@ class ProjectInventoryItem(DataClassJsonMixin):
     vulnerabilitySummary: Optional[List[Dict[str, Dict]]] = None
     filePaths: Optional[List[str]] = None
 
-@dataclass_json #Trying this style instead of DataClassJsonMixin
+
+@dataclass_json  # Trying this style instead of DataClassJsonMixin
 @dataclass
-class ProjectInventory():
+class ProjectInventory:
     projectId: int
     inventoryItems: List[ProjectInventoryItem]
+
 
 @dataclass
 class Report(DataClassJsonMixin):
