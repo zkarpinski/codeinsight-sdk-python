@@ -90,8 +90,7 @@ class CodeInsightClient:
     def experimental(self) -> ExperimentalHandler:
         if self.experimental_enabled == False:
             raise CodeInsightError("Experimental API is not enabled for this instance")
-        else:
-            return ExperimentalHandler(self)
+        return ExperimentalHandler(self)
 
     # Coming soon...?
 
