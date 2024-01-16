@@ -8,4 +8,4 @@ client = CodeInsightClient(shared.BASE_URL, shared.AUTH_TOKEN)
 
 
 inventory = client.project_inventory.get(1)
-df = pd.DataFrame(inventory.__dict__['inventoryItems'])
+df = pd.DataFrame(inventory.__dict__["inventoryItems"])
