@@ -5,7 +5,6 @@ import requests_mock
 
 
 from codeinsight_sdk import CodeInsightClient
-from codeinsight_sdk.exceptions import CodeInsightError
 
 logger = logging.getLogger(__name__)
 
