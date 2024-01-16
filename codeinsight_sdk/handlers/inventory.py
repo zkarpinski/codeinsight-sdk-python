@@ -7,7 +7,7 @@ class InventoryHandler(Handler):
     def __init__(self, client):
         super().__init__(client)
         self.cls = ProjectInventoryItem
-    
+
     def get(self, inventoryId: int) -> list[ProjectInventoryItem]:
         """
         Get an inventory item by id.
@@ -24,7 +24,7 @@ class InventoryHandler(Handler):
         for inv_item in resp.json()['data']:
             inventory.append(ProjectInventoryItem.from_dict(inv_item))
         return inventory
-    
+
     def get_inventory_vulnerabilities(self, inventoryId: int,
                                       limit: int = 25,
                                       offset: int = 1) -> list[Vulnerability]:

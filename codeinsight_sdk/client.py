@@ -59,50 +59,50 @@ class CodeInsightClient:
     @property
     def projects(self) -> ProjectHandler:
         return ProjectHandler(self)
-    
+
     @property
     def reports(self) -> ReportHandler:
         return ReportHandler(self)
-    
+
     @property
     def inventories(self):
         return InventoryHandler(self)
-    
+
     @property
     def experimental(self) -> ExperimentalHandler:
         if self.experimental_enabled == False:
             raise CodeInsightError("Experimental API is not enabled for this instance")
         else:
             return ExperimentalHandler(self)
-    
-    
+
+
     # Coming soon...?
 
-    
+
     def vulnerabilites(self):
         raise NotImplementedError
-    
+
     def users(self):
         raise NotImplementedError
-    
+
     def licenses(self):
         raise NotImplementedError
-    
+
     def tasks(self):
         raise NotImplementedError
-    
+
     def rules(self):
         raise NotImplementedError
-    
+
     def files(self):
         raise NotImplementedError
-    
+
     def folders(self):
         raise NotImplementedError
-    
+
     def jobs(self):
         raise NotImplementedError
-    
+
     def components(self):
         raise NotImplementedError
 

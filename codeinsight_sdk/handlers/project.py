@@ -129,7 +129,7 @@ class ProjectHandler(Handler):
         inventory = []
         for inv_item in resp.json()['data']:
             inventory.append(ProjectInventoryItem.from_dict(inv_item))
-        
+
         # Iterate through all the pages
         if number_of_pages > offset:
             params.update({"offset": offset+1})
@@ -137,7 +137,7 @@ class ProjectHandler(Handler):
             # Only append the inventory records
             inventory.extend(chunk)
         return inventory
-    
+
     def get_inventory(self,project_id:int,
                       skip_vulnerabilities: bool = False,
                       published:bool = True,
@@ -171,7 +171,7 @@ class ProjectHandler(Handler):
             project.inventoryItems.extend(chunk.inventoryItems)
 
         return project
-    
+
     def upload_codebase(self, project_id:int,
                         codebase_path:str,
                         deleteExistingFileOnServer: bool = False,
