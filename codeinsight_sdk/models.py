@@ -38,8 +38,8 @@ class ProjectInventoryItem(DataClassJsonMixin):
     type: str
     priority: str
     createdBy: str
-    createdOn: str
-    updatedOn: str
+    createdOn: Optional[str] = None
+    updatedOn: Optional[str] = None
     url: Optional[str] = None
     componentUrl: Optional[str] = None
     componentDescription: Optional[str] = None
