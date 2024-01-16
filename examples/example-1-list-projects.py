@@ -8,4 +8,3 @@ client = CodeInsightClient(shared.BASE_URL, shared.AUTH_TOKEN)
 
 
 print(client.projects.all())
-

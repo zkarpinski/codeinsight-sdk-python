@@ -13,14 +13,15 @@ logger = logging.getLogger(__name__)
 TEST_URL = "https://api.revenera.com"
 TEST_API_TOKEN = "your_api_token"
 
+
 class TestExperimental:
     @pytest.fixture
     def client(self):
         return CodeInsightClient(TEST_URL, TEST_API_TOKEN, experimental=True)
-    
+
     def test_experimental_enabled(self, client):
         assert client.experimental_enabled == True
-    
+
     def test_get_project_vulnerabilities(self, client):
         project_id = 1
         total_pages = 4
@@ -86,11 +87,21 @@ class TestExperimental:
             "vulnerabilityCvssV3Severity":"CRITICAL"} ] }
         """
         with requests_mock.Mocker() as m:
-            m.get(f"{TEST_URL}/codeinsight/api/projects/{project_id}/inventorySummary", 
-                  text=fake_response_json, headers=response_header)
-            m.get(f"{TEST_URL}/codeinsight/api/inventories/12346/vulnerabilities", 
-                  text=mock_resp_vuln, headers=response_header)
-            vulnerable_items = client.experimental.get_project_vulnerabilities(project_id)
+            m.get(
+                f"{TEST_URL}/codeinsight/api/projects/{project_id}/inventorySummary",
+                text=fake_response_json,
+                headers=response_header,
+            )
+            m.get(
+                f"{TEST_URL}/codeinsight/api/inventories/12346/vulnerabilities",
+                text=mock_resp_vuln,
+                headers=response_header,
+            )
+            vulnerable_items = client.experimental.get_project_vulnerabilities(
+                project_id
+            )
         assert len(vulnerable_items) > 0
         assert vulnerable_items[0].vulnerabilities is not None
-        assert vulnerable_items[0].vulnerabilities[1].vulnerabilityName == "CVE-987-65432"
+        assert (
+            vulnerable_items[0].vulnerabilities[1].vulnerabilityName == "CVE-987-65432"
+        )

@@ -22,7 +22,7 @@ class ReportHandler(Handler):
         super().__init__(client)
         self.cls = Report
 
-    def get(self, id:int):
+    def get(self, id: int):
         """
         Retrieves a report by its ID.
 
@@ -35,7 +35,7 @@ class ReportHandler(Handler):
         """
         path = f"reports/{id}"
         resp = self.client.request("GET", url_part=path)
-        report_data = resp.json()['data']
+        report_data = resp.json()["data"]
         report = self.cls.from_dict(report_data)
         return report
 
@@ -50,6 +50,6 @@ class ReportHandler(Handler):
         path = "reports"
         resp = self.client.request("GET", url_part=path)
         reports = []
-        for report_data in resp.json()['data']:
+        for report_data in resp.json()["data"]:
             reports.append(self.cls.from_dict(report_data))
         return reports
