@@ -1,6 +1,7 @@
 import abc
 from typing import List
 
+
 class Handler(abc.ABC):
     def __init__(self, client):
         self.client = client
@@ -9,4 +10,3 @@ class Handler(abc.ABC):
     @abc.abstractmethod
     def get(self):
         pass
-
