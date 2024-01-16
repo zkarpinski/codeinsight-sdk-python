@@ -1,6 +1,7 @@
 from .handler import Handler
 from .models import ProjectInventoryItem
 
+
 class ExperimentalHandler(Handler):
     def __init__(self, client):
         super().__init__(client)
@@ -9,7 +10,9 @@ class ExperimentalHandler(Handler):
         # Do nothing, there is no get for this handler
         pass
 
-    def get_project_vulnerabilities(self, project_id:int) -> list[ProjectInventoryItem]:
+    def get_project_vulnerabilities(
+        self, project_id: int
+    ) -> list[ProjectInventoryItem]:
         """
         Get all vulnerabilities for a project.
 
@@ -21,7 +24,9 @@ class ExperimentalHandler(Handler):
         """
         # First we get the inventory summary for the project with vulnerability summary
         # Then we iterate over the inventory items and calling the inventory vulnerability endpoint for each item with a vulnerability
-        inventory = self.client.projects.get_inventory_summary(project_id, vulnerabilitySummary=True)
+        inventory = self.client.projects.get_inventory_summary(
+            project_id, vulnerabilitySummary=True
+        )
 
         # Iterate over the inventory items, find which have vulnerabilities.
         item: ProjectInventoryItem
@@ -31,9 +36,10 @@ class ExperimentalHandler(Handler):
                 continue
 
             # If the item has a vulnerability, get the vulnerability details for this item and append it
-            if sum(item.vulnerabilitySummary[0]['CvssV3'].values()) > 0:
-
-                vul_detail = self.client.inventories.get_inventory_vulnerabilities(item.id)
+            if sum(item.vulnerabilitySummary[0]["CvssV3"].values()) > 0:
+                vul_detail = self.client.inventories.get_inventory_vulnerabilities(
+                    item.id
+                )
                 item.vulnerabilities = vul_detail
                 vuln_items.append(item)
             else:
