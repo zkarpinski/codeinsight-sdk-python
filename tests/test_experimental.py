@@ -59,4 +59,6 @@ class TestExperimental:
             )
         assert len(vulnerable_items) == 1
         assert vulnerable_items[0].vulnerabilities is not None
-        assert (vulnerable_items[0].vulnerabilities[1].vulnerabilityName == "CVE-987-65432")
+        assert (
+            vulnerable_items[0].vulnerabilities[1].vulnerabilityName == "CVE-987-65432"
+        )

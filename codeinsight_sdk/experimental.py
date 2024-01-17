@@ -24,9 +24,8 @@ class ExperimentalHandler(Handler):
         """
         # First we get the inventory for the project
         # Then we iterate over the inventory items and calling the inventory vulnerability endpoint for each item with a vulnerability
-        inventory = self.client.projects.get_inventory(project_id,
-            skip_vulnerabilities=False,
-            include_files=True
+        inventory = self.client.projects.get_inventory(
+            project_id, skip_vulnerabilities=False, include_files=True
         )
 
         # Iterate over the inventory items, find which have vulnerabilities.
@@ -38,6 +37,6 @@ class ExperimentalHandler(Handler):
             # If the item no no vulnerabilities, ignore it
             if len(item.vulnerabilities) == 0:
                 continue
-            #TODO: Summarize the vulnerabilities?
+            # TODO: Summarize the vulnerabilities?
             vuln_items.append(item)
         return vuln_items
