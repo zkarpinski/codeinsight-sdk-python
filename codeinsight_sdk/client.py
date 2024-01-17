@@ -25,7 +25,7 @@ class CodeInsightClient:
         self.__api_token = api_token
         self.__api_headers = {
             "Content-Type": "application/json",
-            "Authorization": "Bearer %s" % self.__api_token,
+            "Authorization": f"Bearer {self.__api_token}",
             "User-Agent": "codeinsight_sdk_python",
         }
         self.__timeout = timeout

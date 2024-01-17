@@ -6,5 +6,5 @@ print("Example 1: List projects")
 
 client = CodeInsightClient(shared.BASE_URL, shared.AUTH_TOKEN)
 
-for prj in client.projects.all():
-    print(f"{prj.id}) - {prj.name}")
+id = client.projects.get_id("Example Project")
+project = client.projects.get(id)
