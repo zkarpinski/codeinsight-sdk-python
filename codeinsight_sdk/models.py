@@ -24,7 +24,7 @@ class Vulnerability(DataClassJsonMixin):
     vulnerabilityId: int
     vulnerabilityName: str
     vulnerabilityDescription: str
-    vulnerabilityCvssV3Score: int
+    vulnerabilityCvssV3Score: str
     vulnerabilityCvssV3Severity: str
 
 
@@ -46,6 +46,7 @@ class ProjectInventoryItem(DataClassJsonMixin):
     vulnerabilities: Optional[List[Vulnerability]] = None
     vulnerabilitySummary: Optional[List[Dict[str, Dict]]] = None
     filePaths: Optional[List[str]] = None
+    parentInventoryItem: Optional[str] = None
 
 
 @dataclass_json  # Trying this style instead of DataClassJsonMixin
@@ -53,6 +54,10 @@ class ProjectInventoryItem(DataClassJsonMixin):
 class ProjectInventory:
     projectId: int
     inventoryItems: List[ProjectInventoryItem]
+    projectName: Optional[str] = None
+    projectDescription: Optional[str] = None
+    ownerName: Optional[str] = None
+    ownerEmail: Optional[str] = None
 
 
 @dataclass

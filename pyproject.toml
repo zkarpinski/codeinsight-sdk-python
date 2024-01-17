@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "codeinsight_sdk"
-version = "0.0.10"
+version = "0.0.11"
 description = "A Python client for the Revenera Code Insight"
 authors = ["Zachary Karpinski <1206496+zkarpinski@users.noreply.github.com>"]
 readme = "README.md"

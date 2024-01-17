@@ -22,38 +22,22 @@ class ExperimentalHandler(Handler):
         Returns:
             dict: The vulnerabilities.
         """
-        # First we get the inventory summary for the project with vulnerability summary
+        # First we get the inventory for the project
         # Then we iterate over the inventory items and calling the inventory vulnerability endpoint for each item with a vulnerability
-        inventory = self.client.projects.get_inventory_summary(
-            project_id, vulnerabilitySummary=True
+        inventory = self.client.projects.get_inventory(project_id,
+            skip_vulnerabilities=False,
+            include_files=True
         )
 
         # Iterate over the inventory items, find which have vulnerabilities.
         item: ProjectInventoryItem
         vuln_items: list(ProjectInventoryItem) = []
-        for item in inventory:
-            if item.vulnerabilitySummary is None or len(item.vulnerabilitySummary) == 0:
+        for item in inventory.inventoryItems:
+            if item.vulnerabilities is None:
                 continue
-
-            # If the item has a vulnerability, get the vulnerability details for this item and append it
-            item_vul_summary = item.vulnerabilitySummary[0]
-            k = ""
-            if "CvssV2" in item_vul_summary.keys():
-                k = "CvssV2"
-            elif "CvssV3" in item_vul_summary.keys():
-                k = "CvssV3"
-            else:
-                # If the item has no vulnerabilities, skip it
+            # If the item no no vulnerabilities, ignore it
+            if len(item.vulnerabilities) == 0:
                 continue
-
-            if sum(item_vul_summary[k].values()) > 0:
-                vul_detail = self.client.inventories.get_inventory_vulnerabilities(
-                    item.id
-                )
-                item.vulnerabilities = vul_detail
-                vuln_items.append(item)
-            else:
-                # If the item has no vulnerabilities, skip it
-                continue
-
+            #TODO: Summarize the vulnerabilities?
+            vuln_items.append(item)
         return vuln_items
