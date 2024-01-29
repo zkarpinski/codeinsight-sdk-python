@@ -17,7 +17,7 @@ requests = "^2.31.0"
 dataclasses-json = "^0.6.3"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.4.3"
+pytest = ">=7.4.3,<9.0.0"
 pytest-mock = "^3.0.0"
 pytest-cov = "*"
 exceptiongroup = "^1.2.0"
