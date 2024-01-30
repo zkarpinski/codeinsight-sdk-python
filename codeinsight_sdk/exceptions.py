@@ -24,7 +24,7 @@ class CodeInsightError(GenericError):
             self.message = resp["Error: "]
             self.arguments = resp["Arguments: "]
             self.error = resp["Key: "]
-            self.add_note(f"Arguments: {self.arguments}")
+            ##self.add_note(f"Arguments: {self.arguments}")
             super().__init__("Error: %s - %s" % (self.code, self.message))
 
         except KeyError:
