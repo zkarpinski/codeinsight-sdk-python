@@ -27,7 +27,7 @@ class CodeInsightError(GenericError):
             self.add_note(f"Arguments: {self.arguments}")
             super().__init__("Error: %s - %s" % (self.code, self.message))
 
-        except KeyError:
-            raise ValueError(f"Error parsing response: {resp}")
-        except json.decoder.JSONDecodeError:
-            raise ValueError(f"Error decoding response: {resp}")
+        except KeyError as err:
+            raise ValueError(f"Error parsing response: {resp}") from err
+        except json.decoder.JSONDecodeError as err:
+            raise ValueError(f"Error decoding response: {response}") from err

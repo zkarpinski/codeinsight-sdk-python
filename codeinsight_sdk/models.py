@@ -47,6 +47,10 @@ class ProjectInventoryItem(DataClassJsonMixin):
     vulnerabilitySummary: Optional[List[Dict[str, Dict]]] = None
     filePaths: Optional[List[str]] = None
     parentInventoryItem: Optional[str] = None
+    dependencyScope: Optional[str] = None
+    disclosed: Optional[bool] = None
+    selectedLicenseName: Optional[str] = None
+    selectedLicenseSPDXIdentifier: Optional[str] = None
 
 
 @dataclass_json  # Trying this style instead of DataClassJsonMixin
