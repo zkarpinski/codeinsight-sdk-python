@@ -44,8 +44,13 @@ jobs:
     - name: Install dependencies
       run: poetry install -v
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-
     - name: Run pytest
       run: |
         source .venv/bin/activate
-        poetry run pytest
+        poetry run pytest --cov app
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        verbose: true
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
