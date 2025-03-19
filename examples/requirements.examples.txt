@@ -1,2 +1,2 @@
-codeinsight-sdk==0.0.12
+codeinsight-sdk==0.0.14
 pandas~=2.2.3
