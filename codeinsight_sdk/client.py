@@ -95,44 +95,53 @@ class CodeInsightClient:
     @property
     def vulnerabilities(self):
         from .handlers import VulnerabilityHandler
+
         return VulnerabilityHandler(self)
 
     @property
     def users(self):
         from .handlers import UserHandler
+
         return UserHandler(self)
 
     @property
     def licenses(self):
         from .handlers import LicenseHandler
+
         return LicenseHandler(self)
 
     @property
     def tasks(self):
         from .handlers import TaskHandler
+
         return TaskHandler(self)
 
     @property
     def rules(self):
         from .handlers import RuleHandler
+
         return RuleHandler(self)
 
     @property
     def files(self):
         from .handlers import FileHandler
+
         return FileHandler(self)
 
     @property
     def folders(self):
         from .handlers import FolderHandler
+
         return FolderHandler(self)
 
     @property
     def jobs(self):
         from .handlers import JobHandler
+
         return JobHandler(self)
 
     @property
     def components(self):
         from .handlers import ComponentHandler
+
         return ComponentHandler(self)

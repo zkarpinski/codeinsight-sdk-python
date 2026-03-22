@@ -72,40 +72,48 @@ class Report(DataClassJsonMixin):
     createdDateTime: str
     updatedDateTime: str
 
+
 @dataclass
 class User(DataClassJsonMixin):
     id: int
     name: str
+
 
 @dataclass
 class License(DataClassJsonMixin):
     id: int
     name: str
 
+
 @dataclass
 class Task(DataClassJsonMixin):
     id: int
     name: str
+
 
 @dataclass
 class Rule(DataClassJsonMixin):
     id: int
     name: str
 
+
 @dataclass
 class File(DataClassJsonMixin):
     id: int
     name: str
+
 
 @dataclass
 class Folder(DataClassJsonMixin):
     id: int
     name: str
 
+
 @dataclass
 class Job(DataClassJsonMixin):
     id: int
     name: str
+
 
 @dataclass
 class Component(DataClassJsonMixin):

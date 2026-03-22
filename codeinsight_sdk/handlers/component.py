@@ -2,6 +2,7 @@ from typing import List
 from ..handler import Handler
 from ..models import Component
 
+
 class ComponentHandler(Handler):
     def all(self) -> List[Component]:
         """

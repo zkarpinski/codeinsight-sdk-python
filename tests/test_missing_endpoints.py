@@ -9,16 +9,19 @@ logger = logging.getLogger(__name__)
 TEST_URL = "https://api.revenera.com"
 TEST_API_TOKEN = "your_api_token"
 
+
 @pytest.fixture
 def client(codeinsight_mock):
     # The fixture starts the mock adapter automatically
     return CodeInsightClient(TEST_URL, TEST_API_TOKEN)
+
 
 class TestVulnerabilityEndpoints:
     def test_get_vulnerability(self, client):
         vuln = client.vulnerabilities.get(1)
         assert vuln.vulnerabilityId == 1
         assert vuln.vulnerabilityName == "CVE-123"
+
 
 class TestUserEndpoints:
     def test_get_all_users(self, client):
@@ -31,6 +34,7 @@ class TestUserEndpoints:
         assert user.id == 1
         assert user.name == "Mock User 1"
 
+
 class TestLicenseEndpoints:
     def test_get_all_licenses(self, client):
         licenses = client.licenses.all()
@@ -41,6 +45,7 @@ class TestLicenseEndpoints:
         license = client.licenses.get(1)
         assert license.id == 1
         assert license.name == "Mock License 1"
+
 
 class TestTaskEndpoints:
     def test_get_all_tasks(self, client):
@@ -53,6 +58,7 @@ class TestTaskEndpoints:
         assert task.id == 1
         assert task.name == "Mock Task 1"
 
+
 class TestRuleEndpoints:
     def test_get_all_rules(self, client):
         rules = client.rules.all()
@@ -64,17 +70,20 @@ class TestRuleEndpoints:
         assert rule.id == 1
         assert rule.name == "Mock Rule 1"
 
+
 class TestFileEndpoints:
     def test_get_file(self, client):
         file = client.files.get(1)
         assert file.id == 1
         assert file.name == "Mock File 1"
 
+
 class TestFolderEndpoints:
     def test_get_folder(self, client):
         folder = client.folders.get(1)
         assert folder.id == 1
         assert folder.name == "Mock Folder 1"
+
 
 class TestJobEndpoints:
     def test_get_all_jobs(self, client):
@@ -86,6 +95,7 @@ class TestJobEndpoints:
         job = client.jobs.get(1)
         assert job.id == 1
         assert job.name == "Mock Job 1"
+
 
 class TestComponentEndpoints:
     def test_get_all_components(self, client):

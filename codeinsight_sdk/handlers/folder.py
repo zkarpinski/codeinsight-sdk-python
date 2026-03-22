@@ -2,6 +2,7 @@ from typing import List
 from ..handler import Handler
 from ..models import Folder
 
+
 class FolderHandler(Handler):
     def get(self, id: int) -> Folder:
         """

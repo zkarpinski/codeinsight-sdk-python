@@ -2,6 +2,7 @@ from typing import List
 from ..handler import Handler
 from ..models import License
 
+
 class LicenseHandler(Handler):
     def all(self) -> List[License]:
         """

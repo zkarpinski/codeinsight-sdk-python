@@ -194,6 +194,7 @@ class TestProjectEndpoints:
                 ]
             }
             """
+
         with requests_mock.Mocker() as m:
             m.get(
                 f"{TEST_URL}/codeinsight/api/projects/{project_id}/inventorySummary",

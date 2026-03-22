@@ -2,6 +2,7 @@ from typing import List
 from ..handler import Handler
 from ..models import Job
 
+
 class JobHandler(Handler):
     def all(self) -> List[Job]:
         """

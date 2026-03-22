@@ -2,6 +2,7 @@ from typing import List
 from ..handler import Handler
 from ..models import User
 
+
 class UserHandler(Handler):
     def all(self) -> List[User]:
         """
