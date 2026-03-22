@@ -159,44 +159,46 @@ class TestProjectEndpoints:
             resp = client.projects.upload_codebase(project_id, codebase_path)
         assert resp == 200
 
-    #### FIX THIS! ####
     def test_get_project_inventory_summary(self, client):
         project_id = 1
         total_pages = 4
         total_records = total_pages * 2
-        response_header = {"content-type": "application/json"}
-        response_header["current-page"] = "1"
-        response_header["number-of-pages"] = str(total_pages)
-        response_header["total-records"] = str(total_records)
-        fake_response_json = """ { "data": [
-            {
-                "itemNumber": 1,
-                "id": 12345,
-                "name": "Inventory Item 1",
-                "type":"component",
-                "priority":"low",
-                "createdBy":"Zach",
-                "componentName":"snakeyaml",
-                "componentVersionName":"2.0"
-            },
-            {
-                "itemNumber": 2,
-                "id": 12346,
-                "name": "Inventory Item 2",
-                "type":"component",
-                "priority":"low",
-                "createdBy":"Zach",
-                "componentName":"snakeyaml",
-                "componentVersionName":"2.0"
+
+        def inventory_summary_callback(request, context):
+            offset = int(request.qs.get("offset", ["1"])[0])
+            context.headers["content-type"] = "application/json"
+            context.headers["current-page"] = str(offset)
+            context.headers["number-of-pages"] = str(total_pages)
+            context.headers["total-records"] = str(total_records)
+            return """ { "data": [
+                {
+                    "itemNumber": 1,
+                    "id": 12345,
+                    "name": "Inventory Item 1",
+                    "type":"component",
+                    "priority":"low",
+                    "createdBy":"Zach",
+                    "componentName":"snakeyaml",
+                    "componentVersionName":"2.0"
+                },
+                {
+                    "itemNumber": 2,
+                    "id": 12346,
+                    "name": "Inventory Item 2",
+                    "type":"component",
+                    "priority":"low",
+                    "createdBy":"Zach",
+                    "componentName":"snakeyaml",
+                    "componentVersionName":"2.0"
+                }
+                ]
             }
-            ]
-        }
-        """
+            """
+
         with requests_mock.Mocker() as m:
             m.get(
                 f"{TEST_URL}/codeinsight/api/projects/{project_id}/inventorySummary",
-                text=fake_response_json,
-                headers=response_header,
+                text=inventory_summary_callback,
             )
             project_inventory_summary = client.projects.get_inventory_summary(
                 project_id

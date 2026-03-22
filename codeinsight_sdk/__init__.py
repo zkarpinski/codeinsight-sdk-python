@@ -16,3 +16,9 @@ Basic usage:
 """
 
 from .client import CodeInsightClient
+
+# Optional mocking support
+try:
+    from .testing import CodeInsightMockAdapter, mock_client, codeinsight_mock
+except ImportError:
+    pass

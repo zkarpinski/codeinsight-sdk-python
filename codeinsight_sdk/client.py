@@ -92,31 +92,56 @@ class CodeInsightClient:
             raise CodeInsightError("Experimental API is not enabled for this instance")
         return ExperimentalHandler(self)
 
-    # Coming soon...?
+    @property
+    def vulnerabilities(self):
+        from .handlers import VulnerabilityHandler
 
-    def vulnerabilites(self):
-        raise NotImplementedError
+        return VulnerabilityHandler(self)
 
+    @property
     def users(self):
-        raise NotImplementedError
+        from .handlers import UserHandler
 
+        return UserHandler(self)
+
+    @property
     def licenses(self):
-        raise NotImplementedError
+        from .handlers import LicenseHandler
 
+        return LicenseHandler(self)
+
+    @property
     def tasks(self):
-        raise NotImplementedError
+        from .handlers import TaskHandler
 
+        return TaskHandler(self)
+
+    @property
     def rules(self):
-        raise NotImplementedError
+        from .handlers import RuleHandler
 
+        return RuleHandler(self)
+
+    @property
     def files(self):
-        raise NotImplementedError
+        from .handlers import FileHandler
 
+        return FileHandler(self)
+
+    @property
     def folders(self):
-        raise NotImplementedError
+        from .handlers import FolderHandler
 
+        return FolderHandler(self)
+
+    @property
     def jobs(self):
-        raise NotImplementedError
+        from .handlers import JobHandler
 
+        return JobHandler(self)
+
+    @property
     def components(self):
-        raise NotImplementedError
+        from .handlers import ComponentHandler
+
+        return ComponentHandler(self)
