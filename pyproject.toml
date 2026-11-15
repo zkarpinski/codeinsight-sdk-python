@@ -17,7 +17,7 @@ requests = "^2.31.0"
 dataclasses-json = "^0.6.3"
 
 [tool.poetry.group.dev.dependencies]
-pytest = ">=9.0.3,<9.1.0"
+pytest = ">=8.4.2,<9.0.0"
 pytest-mock = "^3.0.0"
 pytest-cov = "*"
 exceptiongroup = "^1.2.0"
@@ -30,5 +30,4 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = ["--cov=codeinsight_sdk", "--cov-report=term-missing"]
-
 
